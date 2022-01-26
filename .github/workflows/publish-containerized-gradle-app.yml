@@ -1,0 +1,80 @@
+---
+name: publish-containerized-gradle-app
+
+on:
+  workflow_call:
+    inputs:
+      setup_google_cloud_auth:
+        description: Whether to attempt setting up google cloud auth. Namely, for pulling artifacts from a Google Registry.
+        type: boolean
+        default: true
+        required: false
+      setup_azure_container_registry:
+        description: Whether to attempt setting up azure container registry auth.
+        type: boolean
+        default: true
+        required: false
+      azure_container_registry_login_server:
+        description: Optional container registry URL, assuming setup_azure_container_registry is true.
+        type: string
+        required: false
+      release_scope:
+        description: Git tagging release scope, such as major, minor, or patch.
+        type: string
+        required: true
+    secrets:
+      google_cloud_service_account_key:
+        description: Optional Google Cloud service account key, assuming setup_google_cloud_auth is true.
+        required: false
+      azure_container_registry_username:
+        description: Optional Azure container registry username, assuming setup_azure_container_registry is true.
+        required: false
+      azure_container_registry_key:
+        description: Optional Azure container registry key, assuming setup_azure_container_registry is true.
+        required: false
+      github_token:
+        description: Standard github.token used for git-tagging the release version against the calling repository.
+        required: true
+
+env:
+  GRADLE_SWITCHES: --console=plain --info --stacktrace
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: 11
+      - name: configure-git-user
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - uses: google-github-actions/setup-gcloud@v0.4.0
+        if: inputs.setup_google_cloud_auth
+        with:
+          service_account_key: ${{ secrets.google_cloud_service_account_key }}
+
+      - name: setup-azure-container-registry
+        if: inputs.setup_azure_container_registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.azure_container_registry_login_server }}
+          username: ${{ secrets.azure_container_registry_username }}
+          password: ${{ secrets.azure_container_registry_key }}
+
+      - run: gcloud auth configure-docker
+
+      - name: build, tag, and push docker image
+        uses: gradle/gradle-build-action@v2
+        env:
+          TESTCONTAINERS_RYUK_DISABLED: true
+          GRGIT_USER: ${{ github.actor }}
+          GRGIT_PASS: ${{ secrets.github_token }}
+        with:
+          arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} final -x test
