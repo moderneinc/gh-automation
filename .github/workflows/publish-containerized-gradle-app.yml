@@ -32,7 +32,7 @@ on:
       azure_container_registry_key:
         description: Optional Azure container registry key, assuming setup_azure_container_registry is true.
         required: false
-      github_token:
+      caller_github_token:
         description: Standard github.token used for git-tagging the release version against the calling repository.
         required: true
 
@@ -75,6 +75,6 @@ jobs:
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
           GRGIT_USER: ${{ github.actor }}
-          GRGIT_PASS: ${{ secrets.github_token }}
+          GRGIT_PASS: ${{ secrets.caller_github_token }}
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} final -x test
