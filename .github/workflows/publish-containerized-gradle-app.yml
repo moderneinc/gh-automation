@@ -69,6 +69,7 @@ jobs:
           password: ${{ secrets.azure_container_registry_key }}
 
       - run: gcloud auth configure-docker
+        if: inputs.setup_google_cloud_auth
 
       - name: build, tag, and push docker image
         uses: gradle/gradle-build-action@v2
