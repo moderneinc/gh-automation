@@ -19,6 +19,12 @@ on:
       bucket_mirror_target:
         description: Name of the object storage bucket backup to use.
         required: true
+      slack_notification_webhook:
+        description: Where to post notifications
+        required: false
+      slack_bot_token:
+        description: Access token for posting slack messages
+        required: false
 
 jobs:
   repository-backup:
@@ -35,3 +41,12 @@ jobs:
           STORAGE_SERVICE_URL: ${{ inputs.bucket_storage_service_url }}
         with:
           args: --overwrite --remove
+      - name: Send notification on error
+        if: ${{ failure() }}
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          channel-id: 'alerts'
+          slack-message: ":boom: Unable to backup ${{ github.repository }} to S3"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
+
