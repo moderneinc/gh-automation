@@ -9,6 +9,11 @@ on:
         type: string
         default: https://s3.us-west-2.amazonaws.com
         required: false
+      slack_channel:
+        description: Slack channel to post notification in the event of failure.
+        type: string
+        default: alerts
+        required: false
     secrets:
       bucket_access_key_id:
         description: Value of the object storage bucket backup access key ID (e.g., S3 has ACCESS_KEY_ID).
@@ -20,7 +25,7 @@ on:
         description: Name of the object storage bucket backup to use.
         required: true
       slack_notification_webhook:
-        description: Where to post notifications
+        description: (DEPRECATED) Where to post notifications
         required: false
       slack_bot_token:
         description: Access token for posting slack messages
@@ -45,8 +50,8 @@ jobs:
         if: ${{ failure() }}
         uses: slackapi/slack-github-action@v1.18.0
         with:
-          channel-id: 'alerts'
-          slack-message: ":boom: Unable to backup ${{ github.repository }} to S3"
+          channel-id: ${{ inputs.slack_channel }}
+          slack-message: ":boom: Unable to backup ${{ github.repository }} to S3"w
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
 

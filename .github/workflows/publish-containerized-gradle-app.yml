@@ -50,15 +50,17 @@ jobs:
         with:
           distribution: temurin
           java-version: 11
+          cache: "gradle"
       - name: configure-git-user
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      - uses: google-github-actions/setup-gcloud@v0.5.1
+      - uses: google-github-actions/auth@v0
         if: inputs.setup_google_cloud_auth
         with:
-          service_account_key: ${{ secrets.google_cloud_service_account_key }}
+          credentials_json: ${{ secrets.google_cloud_service_account_key }}
+      - uses: google-github-actions/setup-gcloud@v0.5.1
 
       - name: setup-azure-container-registry
         if: inputs.setup_azure_container_registry
