@@ -19,6 +19,11 @@ on:
         type: boolean
         default: true
         required: false
+      slack_channel:
+        description: Slack channel to post notification in the event of failure.
+        type: string
+        default: vulnerability-alerts
+        required: false
     secrets:
       slack_bot_token:
         description: Access token for posting slack messages
@@ -55,12 +60,12 @@ jobs:
         with:
           name: dependency-check-report
           path: build/reports
-      - name: Post to vulnerability-alerts channel
+      - name: Send notification of failure to Slack
         if: failure() && inputs.notify_slack
         id: slack
         uses: slackapi/slack-github-action@v1.18.0
         with:
-          channel-id: 'vulnerability-alerts'
+          channel-id: ${{ inputs.slack_channel }}
           slack-message: "Dependency check vulnerability report for ${{ github.repository }}: ${{ job.status }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
