@@ -1,0 +1,51 @@
+---
+name: publish-maven-artifact
+
+on:
+  workflow_call:
+    inputs:
+      release_scope:
+        description: Git tagging release scope, such as major, minor, or patch.
+        default: minor
+        type: string
+        required: true
+    secrets:
+      google_cloud_service_account_key:
+        description: Optional Google Cloud service account key, assuming setup_google_cloud_auth is true.
+        required: true
+      caller_github_token:
+        description: Standard github.token used for git-tagging the release version against the calling repository.
+        required: true
+
+env:
+  GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+  GRADLE_SWITCHES: "--console=plain --info --stacktrace --no-daemon"
+  GRGIT_AUTH_SWITCHES: "-Dorg.ajoberstar.grgit.auth.username=${{github.actor}} -Dorg.ajoberstar.grgit.auth.password=${{secrets.caller_github_token}}"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'moderneinc'
+    steps:
+      - name: git-checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: set-up-jdk
+        uses: actions/setup-java@v2
+        with:
+        with:
+          distribution: temurin
+          java-version: 11
+          cache: "gradle"
+      - name: configure-git-user
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - name: setup-gcloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.google_cloud_service_account_key }}
+      - uses: google-github-actions/setup-gcloud@v0.6
+      - name: build, test, and publish jar
+        run: ./gradlew ${GRADLE_SWITCHES} ${GRGIT_AUTH_SWITCHES} -Prelease.scope=${{ inputs.release_scope }} final
