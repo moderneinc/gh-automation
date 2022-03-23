@@ -49,7 +49,7 @@ jobs:
         if: inputs.setup_google_cloud_auth
         with:
           credentials_json: ${{ secrets.google_cloud_service_account_key }}
-      - uses: google-github-actions/setup-gcloud@v0.5.1
+      - uses: google-github-actions/setup-gcloud@v0.6.0
         if: inputs.setup_google_cloud_auth
       - name: dependency-check
         uses: gradle/gradle-build-action@v2

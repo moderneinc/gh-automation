@@ -60,7 +60,7 @@ jobs:
         if: inputs.setup_google_cloud_auth
         with:
           credentials_json: ${{ secrets.google_cloud_service_account_key }}
-      - uses: google-github-actions/setup-gcloud@v0.5.1
+      - uses: google-github-actions/setup-gcloud@v0.6.0
 
       - name: setup-azure-container-registry
         if: inputs.setup_azure_container_registry
