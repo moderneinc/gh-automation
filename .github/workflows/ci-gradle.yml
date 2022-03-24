@@ -43,7 +43,7 @@ jobs:
       - name: build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ env.GRADLE_SWITCHES }} build
+          arguments: ${{ env.GRADLE_SWITCHES }} build test
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always() && inputs.publish_tests
