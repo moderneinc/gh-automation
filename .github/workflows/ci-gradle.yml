@@ -7,7 +7,7 @@ on:
       publish_tests:
         description: Whether to attempt publishing unit test results.
         type: boolean
-        default: true
+        default: false
         required: false
       setup_google_cloud_auth:
         description: Whether to attempt setting up google cloud auth. Namely, for pulling artifacts from a Google Registry.
