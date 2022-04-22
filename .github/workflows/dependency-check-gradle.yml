@@ -9,6 +9,11 @@ on:
         type: boolean
         default: true
         required: false
+      create_issue:
+        description: Whether to create a Github issue if the dependency-check report fails, such as a detected CVE hitting the CVSS threshold.
+        type: boolean
+        default: true
+        required: false
       upload_artifact:
         description: Whether to upload the generated dependency-check report as an artifact to the GitHub Action job run.
         type: boolean
@@ -39,6 +44,8 @@ jobs:
   dependency-check:
     runs-on: ubuntu-latest
     steps:
+      - name: Set current date as env variable
+        run: echo "TODAY::$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
@@ -69,3 +76,14 @@ jobs:
           slack-message: "Dependency check vulnerability report for ${{ github.repository }}: ${{ job.status }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
+      - name: Create issue of failure
+        if: failure() && inputs.create_issue
+        id: gh-issue
+        uses: dacbd/create-issue-action@main
+        with:
+          token: ${{ github.token }}
+          title: "Dependency check vulnerability failure for ${{ github.repository }} ${{ env.TODAY }}"
+          body: |
+            ### Vulnerability report for ${{ github.repository }}
+            [Failure for ${{ env.TODAY }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
