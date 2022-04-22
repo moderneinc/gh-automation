@@ -83,6 +83,7 @@ jobs:
         with:
           token: ${{ github.token }}
           title: "Dependency check vulnerability failure for ${{ github.repository }} ${{ env.TODAY }}"
+          labels: vulnerability
           body: |
             ### Vulnerability report for ${{ github.repository }}
             [Failure for ${{ env.TODAY }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
