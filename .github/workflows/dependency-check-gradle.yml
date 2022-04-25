@@ -12,7 +12,7 @@ on:
       create_issue:
         description: Whether to create a Github issue if the dependency-check report fails, such as a detected CVE hitting the CVSS threshold.
         type: boolean
-        default: true
+        default: false
         required: false
       upload_artifact:
         description: Whether to upload the generated dependency-check report as an artifact to the GitHub Action job run.
