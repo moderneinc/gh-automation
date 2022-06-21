@@ -4,37 +4,11 @@ name: publish-containerized-gradle-app
 on:
   workflow_call:
     inputs:
-      setup_google_cloud_auth:
-        description: Whether to attempt setting up google cloud auth. Namely, for pulling artifacts from a Google Registry.
-        type: boolean
-        default: true
-        required: false
-      setup_azure_container_registry:
-        description: Whether to attempt setting up azure container registry auth.
-        type: boolean
-        default: false
-        required: false
-      azure_container_registry_login_server:
-        description: Optional container registry URL, assuming setup_azure_container_registry is true.
-        type: string
-        required: false
       release_scope:
         description: Git tagging release scope, such as major, minor, or patch.
         type: string
         required: true
-    secrets:
-      google_cloud_service_account_key:
-        description: Optional Google Cloud service account key, assuming setup_google_cloud_auth is true.
-        required: false
-      azure_container_registry_username:
-        description: Optional Azure container registry username, assuming setup_azure_container_registry is true.
-        required: false
-      azure_container_registry_key:
-        description: Optional Azure container registry key, assuming setup_azure_container_registry is true.
-        required: false
-      caller_github_token:
-        description: Standard github.token used for git-tagging the release version against the calling repository.
-        required: true
+        default: minor
 
 env:
   GRADLE_SWITCHES: --console=plain --info --stacktrace
@@ -59,7 +33,7 @@ jobs:
       - uses: google-github-actions/auth@v0
         if: inputs.setup_google_cloud_auth
         with:
-          credentials_json: ${{ secrets.google_cloud_service_account_key }}
+          credentials_json: ${{ secrets.GCR_KEY }}
       - uses: google-github-actions/setup-gcloud@v0.6.0
 
       - run: gcloud auth configure-docker
@@ -70,6 +44,6 @@ jobs:
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
           GRGIT_USER: ${{ github.actor }}
-          GRGIT_PASS: ${{ secrets.caller_github_token }}
+          GRGIT_PASS: ${{ secrets.GITHUB_TOKEN }}
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} final -x test
