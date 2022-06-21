@@ -12,7 +12,7 @@ on:
       setup_azure_container_registry:
         description: Whether to attempt setting up azure container registry auth.
         type: boolean
-        default: true
+        default: false
         required: false
       azure_container_registry_login_server:
         description: Optional container registry URL, assuming setup_azure_container_registry is true.
@@ -61,14 +61,6 @@ jobs:
         with:
           credentials_json: ${{ secrets.google_cloud_service_account_key }}
       - uses: google-github-actions/setup-gcloud@v0.6.0
-
-      - name: setup-azure-container-registry
-        if: inputs.setup_azure_container_registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ inputs.azure_container_registry_login_server }}
-          username: ${{ secrets.azure_container_registry_username }}
-          password: ${{ secrets.azure_container_registry_key }}
 
       - run: gcloud auth configure-docker
         if: inputs.setup_google_cloud_auth
