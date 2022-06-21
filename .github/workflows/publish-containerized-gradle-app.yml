@@ -31,13 +31,11 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
       - uses: google-github-actions/auth@v0
-        if: inputs.setup_google_cloud_auth
         with:
           credentials_json: ${{ secrets.GCR_KEY }}
       - uses: google-github-actions/setup-gcloud@v0.6.0
 
       - run: gcloud auth configure-docker
-        if: inputs.setup_google_cloud_auth
 
       - name: build, tag, and push docker image
         uses: gradle/gradle-build-action@v2
