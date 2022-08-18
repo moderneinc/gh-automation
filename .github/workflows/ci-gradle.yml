@@ -48,7 +48,7 @@ jobs:
       - name: build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ env.GRADLE_SWITCHES }} build
+          arguments: ${{ env.GRADLE_SWITCHES }} build publishModernePublicationToArtifactoryRepository
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always() && inputs.publish_tests
