@@ -48,7 +48,7 @@ jobs:
       - name: publish-ast
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ env.GRADLE_SWITCHES }} publishModernePublicationToArtifactoryRepository -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} -s
+          arguments: ${{ env.GRADLE_SWITCHES }} publishModernePublicationToArtifactoryRepository -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} -Porg.gradle.jvmargs=-Xmx1g -s
         if: github.event_name != 'pull_request'
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v2
