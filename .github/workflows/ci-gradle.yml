@@ -19,7 +19,10 @@ on:
         type: boolean
         default: true
         required: false
-
+    secrets:
+       google_cloud_service_account_key:
+         description: DEPRECATED - Optional Google Cloud service account key, assuming setup_google_cloud_auth is passed as true.
+         required: false
 env:
   GRADLE_SWITCHES: --console=plain --info --warning-mode=all
 
@@ -35,8 +38,14 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ inputs.java_version }}
+      # backward compat 
       - uses: google-github-actions/auth@v0
-        if: inputs.setup_google_cloud_auth
+        if: secrets.google_cloud_service_account_key
+        with:
+          credentials_json: ${{ secrets.google_cloud_service_account_key }}
+      # use `secrets: inherit` in caller
+      - uses: google-github-actions/auth@v0
+        if: secrets.GCR_KEY
         with:
           credentials_json: ${{ secrets.GCR_KEY }}
       - uses: google-github-actions/setup-gcloud@v0.6.0
