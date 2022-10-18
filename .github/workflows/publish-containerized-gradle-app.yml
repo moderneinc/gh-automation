@@ -52,7 +52,7 @@ jobs:
           arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} final -x test
       - name: Send notification on error
         if: ${{ failure() }}
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "#ops-saas-deployments"
           slack-message: ":boom: Unable to build an artifact for ${{ github.repository }}"
