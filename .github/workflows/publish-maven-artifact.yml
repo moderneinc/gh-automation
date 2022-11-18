@@ -45,6 +45,6 @@ jobs:
         uses: google-github-actions/auth@v0
         with:
           credentials_json: ${{ secrets.google_cloud_service_account_key }}
-      - uses: google-github-actions/setup-gcloud@v0.6.2
+      - uses: google-github-actions/setup-gcloud@v1.0.1
       - name: build, test, and publish jar
         run: ./gradlew ${GRADLE_SWITCHES} ${GRGIT_AUTH_SWITCHES} -Prelease.scope=${{ inputs.release_scope }} final
