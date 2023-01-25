@@ -44,7 +44,7 @@ jobs:
       - name: build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ env.GRADLE_SWITCHES }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} -Dorg.gradle.console=rich build
+          arguments: ${{ env.GRADLE_SWITCHES }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} build
       - name: publish-ast
         uses: gradle/gradle-build-action@v2
         with:
