@@ -50,8 +50,9 @@ jobs:
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} publishModernePublicationToArtifactoryRepository -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} -Dorg.gradle.jvmargs=-Xmx1g -s
         if: github.event_name != 'pull_request'
-      - name: publish-tests
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always() && inputs.publish_tests
-        with:
-          files: ./**/build/test-results/**/TEST-*.xml
+      # @see https://github.com/EnricoMi/publish-unit-test-result-action/issues/401
+      # - name: publish-tests
+      #   uses: EnricoMi/publish-unit-test-result-action@v2
+      #   if: always() && inputs.publish_tests
+      #   with:
+      #     files: ./**/build/test-results/**/TEST-*.xml
