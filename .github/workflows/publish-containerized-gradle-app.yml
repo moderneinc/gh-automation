@@ -55,6 +55,6 @@ jobs:
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "#ops-saas-deployments"
-          slack-message: ":boom: Unable to build an artifact for ${{ github.repository }}"
+          slack-message: ":boom: Unable to build an artifact for ${{ github.repository }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_MEESEEKS_BOT_TOKEN }}
