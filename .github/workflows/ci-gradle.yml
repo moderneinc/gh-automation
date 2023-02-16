@@ -22,7 +22,8 @@ on:
 
 env:
   GRADLE_SWITCHES: --console=plain --info --warning-mode=all
-
+permissions: # The Dependency Submission API requires write permission
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -41,6 +42,8 @@ jobs:
           credentials_json: ${{ secrets.GCR_KEY }}
       - uses: google-github-actions/setup-gcloud@v1.1.0
         if: inputs.setup_google_cloud_auth
+      - name: Run snapshot action
+        uses: mikepenz/gradle-dependency-submission@{latest}
       - name: build
         uses: gradle/gradle-build-action@v2
         with:
