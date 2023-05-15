@@ -41,8 +41,6 @@ jobs:
           credentials_json: ${{ secrets.GCR_KEY }}
       - uses: google-github-actions/setup-gcloud@v1.1.0
         if: inputs.setup_google_cloud_auth
-        with:
-          version: '400.0.0'
       - name: build
         uses: gradle/gradle-build-action@v2
         with:
