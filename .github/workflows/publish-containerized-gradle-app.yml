@@ -39,8 +39,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCR_KEY }}
       - uses: google-github-actions/setup-gcloud@v1.1.0
-        with:
-          version: '400.0.0'
+
       - run: gcloud auth configure-docker
 
       - name: build, tag, and push docker image
