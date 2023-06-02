@@ -51,12 +51,13 @@ jobs:
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} build
       - name: publish-ast
-        uses: moderneinc/moderne-publish-action@v0.1.2
+        uses: moderneinc/moderne-publish-action@v0.1.9
         with:
           version: 'v0.1.35'
           publishUrl: 'https://artifactory.moderne.ninja/artifactory/moderne-private'
           publishUser: ${{ secrets.AST_PUBLISH_USERNAME }}
           publishPwd: ${{ secrets.AST_PUBLISH_PASSWORD }}
+          verbose: 'true'
         if: github.event_name != 'pull_request' && inputs.publish_lsts == true
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v2
