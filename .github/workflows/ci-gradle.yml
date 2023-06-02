@@ -46,9 +46,12 @@ jobs:
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} build
       - name: publish-ast
-        uses: gradle/gradle-build-action@v2
+        uses: moderneinc/moderne-publish-action@v0.1.1
         with:
-          arguments: ${{ env.GRADLE_SWITCHES }} publishModernePublicationToArtifactoryRepository -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} -Dorg.gradle.jvmargs=-Xmx1g -s
+          version: 'v0.1.35'
+          publishUrl: 'https://artifactory.moderne.ninja/artifactory/moderne-private'
+          publishUser: ${{ secrets.AST_PUBLISH_USERNAME }}
+          publishPwd: ${{ secrets.AST_PUBLISH_PASSWORD }}
         if: github.event_name != 'pull_request'
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v2
