@@ -53,7 +53,7 @@ jobs:
       - name: publish-ast
         uses: moderneinc/moderne-publish-action@v0.1.9
         with:
-          version: 'v0.1.35'
+          version: 'v0.2.3'
           publishUrl: 'https://artifactory.moderne.ninja/artifactory/moderne-private'
           publishUser: ${{ secrets.AST_PUBLISH_USERNAME }}
           publishPwd: ${{ secrets.AST_PUBLISH_PASSWORD }}
