@@ -52,7 +52,7 @@ jobs:
           arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} final -x test
       - name: Send notification on error
         if: ${{ failure() }}
-        uses: slackapi/slack-github-action@v1.23.0
+        uses: slackapi/slack-github-action@v1.24.0
         with:
           channel-id: "#ops-saas-deployments"
           slack-message: ":boom: Unable to build an artifact for ${{ github.repository }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
