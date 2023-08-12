@@ -1,0 +1,105 @@
+---
+name: ci-gradle-nexus
+
+on:
+  workflow_call:
+    inputs:
+      publish_snapshots:
+        description: Whether to attempt publishing snapshots. When false, the workflow will only run build.
+        type: boolean
+        default: true
+        required: false
+      publish_tests:
+        description: Whether to attempt publishing unit test results.
+        type: boolean
+        default: true
+        required: false
+      build_on_graal:
+        description: Whether to perform the main build and test operation on graalvm. When false, the workflow will use actions/setup-java.
+        type: boolean
+        required: false
+        default: false
+      install_graal_languages:
+        description: Single string of space-separated graal languages to install when "build_on_graal" is true. For example, "nodejs python ruby R llvm-toolchain"
+        type: string
+        required: false
+        default: ""
+      setup_google_cloud_auth:
+        description: Whether to attempt setting up google cloud auth. Namely, for pulling artifacts from a Google Registry.
+        type: boolean
+        default: true
+        required: false
+    secrets:
+      gradle_enterprise_access_key:
+        description: Value of the Gradle Enterprise access token to use.
+        required: false
+      gradle_enterprise_cache_username:
+        description: Value of the Gradle Enterprise Cache username to use.
+        required: false
+      gradle_enterprise_cache_password:
+        description: Value of the Gradle Enterprise Cache password to use.
+        required: true
+      ossrh_username:
+        required: true
+      ossrh_token:
+        required: true
+      ossrh_signing_key:
+        required: true
+      ossrh_signing_password:
+        required: true
+      gcr_key:
+        description: The key necessary to authenticate with google cloud account.
+        required: true
+
+
+env:
+  GRADLE_SWITCHES: --console=plain --info --stacktrace --warning-mode=all --no-daemon
+  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.gradle_enterprise_access_key }}
+  GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.gradle_enterprise_cache_username }}
+  GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.gradle_enterprise_cache_password }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: gradle/wrapper-validation-action@v1
+      ########################
+      # The biggest divergence point is choosing between actions/setup-java or graalvm
+      - uses: actions/setup-java@v3.10.0
+        if: (!(inputs.build_on_graal))
+        with:
+          distribution: temurin
+          java-version: 17
+      ###
+      - uses: DeLaGuardo/setup-graalvm@5.0
+        if: inputs.build_on_graal
+        with:
+          java: java11
+          graalvm: 21.2.0
+      - name: install-polyglot-languages
+        if: inputs.build_on_graal && inputs.install_graal_languages != ''
+        run: gu install ${{ inputs.install_graal_languages }}
+      ########################
+      - uses: google-github-actions/auth@v1
+        if: inputs.setup_google_cloud_auth
+        with:
+          credentials_json: ${{ secrets.GCR_KEY }}
+      - uses: google-github-actions/setup-gcloud@v1.1.1
+        if: inputs.setup_google_cloud_auth
+      - name: build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ${{ env.GRADLE_SWITCHES }} build
+      - name: publish-snapshots
+        if: inputs.publish_snapshots && github.event_name != 'pull_request' && github.repository_owner == 'openrewrite'
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ${{ env.GRADLE_SWITCHES }} snapshot publish -PforceSigning -x test
+        env:
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.ossrh_username }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.ossrh_token }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ossrh_signing_key }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ossrh_signing_password }}
