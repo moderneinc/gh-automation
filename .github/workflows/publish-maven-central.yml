@@ -13,6 +13,12 @@ on:
       gradle_enterprise_access_key:
         description: Value of the Gradle Enterprise access token to use.
         required: false
+      gradle_enterprise_cache_username:
+        description: Value of the Gradle Enterprise Cache username to use.
+        required: false
+      gradle_enterprise_cache_password:
+        description: Value of the Gradle Enterprise Cache password to use.
+        required: false
       ossrh_username:
         required: true
       ossrh_token:
@@ -28,6 +34,8 @@ on:
 env:
   GRADLE_SWITCHES: --console=plain --info --stacktrace --warning-mode=all --no-daemon
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.gradle_enterprise_access_key }}
+  GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.gradle_enterprise_cache_username }}
+  GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.gradle_enterprise_cache_password }}
   ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.ossrh_username }}
   ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.ossrh_token }}
   ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ossrh_signing_key }}
