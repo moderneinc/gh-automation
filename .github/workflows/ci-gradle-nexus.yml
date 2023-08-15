@@ -38,7 +38,7 @@ on:
         required: false
       gradle_enterprise_cache_password:
         description: Value of the Gradle Enterprise Cache password to use.
-        required: true
+        required: false
       ossrh_username:
         required: true
       ossrh_token:
