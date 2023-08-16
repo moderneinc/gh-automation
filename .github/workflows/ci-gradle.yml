@@ -24,6 +24,13 @@ on:
         type: boolean
         default: true
         required: false
+    secrets:
+      ast_publish_username:
+        description: Username for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: false
+      ast_publish_password:
+        description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: false
 
 env:
   GRADLE_SWITCHES: --console=plain --info --warning-mode=all
@@ -49,7 +56,7 @@ jobs:
       - name: build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ${{ env.GRADLE_SWITCHES }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} build
+          arguments: ${{ env.GRADLE_SWITCHES }} build
       - name: publish-ast
         uses: moderneinc/moderne-publish-action@v0.1.9
         with:
