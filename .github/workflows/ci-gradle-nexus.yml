@@ -50,13 +50,20 @@ on:
       gcr_key:
         description: The key necessary to authenticate with google cloud account.
         required: true
-
+      ast_publish_username:
+        description: Username for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: false
+      ast_publish_password:
+        description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: false
 
 env:
   GRADLE_SWITCHES: --console=plain --info --stacktrace --warning-mode=all --no-daemon
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.gradle_enterprise_access_key }}
   GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.gradle_enterprise_cache_username }}
   GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.gradle_enterprise_cache_password }}
+  AST_PUBLISH_USERNAME: ${{ secrets.ast_publish_username }}
+  AST_PUBLISH_PASSWORD: ${{ secrets.ast_publish_password }}
 
 jobs:
   build:
