@@ -49,7 +49,7 @@ on:
         required: true
       gcr_key:
         description: The key necessary to authenticate with google cloud account.
-        required: true
+        required: false
       ast_publish_username:
         description: Username for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
         required: false
