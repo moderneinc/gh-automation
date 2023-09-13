@@ -9,6 +9,16 @@ on:
         type: number
         default: 17
         required: false
+      cli_version:
+        description: What version of the Moderne CLI to use
+        type: string
+        default: 'v0.2.6'
+        required: false
+      cli_staging:
+        description: Whether to use the staging version of the Moderne CLI
+        type: boolean
+        default: false
+        required: false
       publish_tests:
         description: Whether to attempt publishing unit test results.
         type: boolean
@@ -77,7 +87,8 @@ jobs:
       - name: publish-ast
         uses: moderneinc/moderne-publish-action@v0.1.9
         with:
-          version: 'v0.2.6'
+          version: ${{ inputs.cli_version }}'
+          staging: '${{ inputs.cli_staging }}'
           publishUrl: 'https://artifactory.moderne.ninja/artifactory/moderne-private'
           publishUser: ${{ secrets.AST_PUBLISH_USERNAME }}
           publishPwd: ${{ secrets.AST_PUBLISH_PASSWORD }}
