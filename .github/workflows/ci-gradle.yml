@@ -75,7 +75,7 @@ jobs:
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} build
       - name: publish-ast
-        uses: moderneinc/moderne-publish-action@v0.1.9
+        uses: moderneinc/moderne-publish-action@v0.1.10
         with:
           version: 'v0.2.6'
           publishUrl: 'https://artifactory.moderne.ninja/artifactory/moderne-private'
