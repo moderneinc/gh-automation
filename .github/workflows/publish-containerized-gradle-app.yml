@@ -41,7 +41,10 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v1.1.1
 
       - run: gcloud auth configure-docker
-
+      - run: rm -rf /opt/hostedtoolcache/CodeQL
+      - run: rm -rf /opt/hostedtoolcache/Ruby
+      - run: rm -rf /opt/hostedtoolcache/go
+      - run: rm -rf /opt/hostedtoolcache/node
       - name: build, tag, and push docker image
         uses: gradle/gradle-build-action@v2
         env:
