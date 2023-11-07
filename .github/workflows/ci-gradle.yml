@@ -74,15 +74,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} build
-      - name: publish-ast
-        uses: moderneinc/moderne-publish-action@v0.1.9
-        with:
-          version: 'v0.2.6'
-          publishUrl: 'https://artifactory.moderne.ninja/artifactory/moderne-private'
-          publishUser: ${{ secrets.AST_PUBLISH_USERNAME }}
-          publishPwd: ${{ secrets.AST_PUBLISH_PASSWORD }}
-          verbose: 'true'
-        if: github.event_name != 'pull_request' && inputs.publish_lsts == true
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always() && inputs.publish_tests
