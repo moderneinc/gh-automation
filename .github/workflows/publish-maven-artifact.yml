@@ -29,6 +29,8 @@ env:
   GRGIT_AUTH_SWITCHES: "-Dorg.ajoberstar.grgit.auth.username=${{github.actor}} -Dorg.ajoberstar.grgit.auth.password=${{secrets.caller_github_token}}"
   AST_PUBLISH_USERNAME: ${{ secrets.ast_publish_username }}
   AST_PUBLISH_PASSWORD: ${{ secrets.ast_publish_password }}
+  MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.MODERNE_ARTIFACTORY_USERNAME }}
+  MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.MODERNE_ARTIFACTORY_PASSWORD }}
 
 jobs:
   release:
