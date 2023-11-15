@@ -17,11 +17,17 @@ on:
         description: Standard github.token used for git-tagging the release version against the calling repository.
         required: true
       ast_publish_username:
-        description: Username for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        description: Username for accessing the ast repository.
         required: false
       ast_publish_password:
-        description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        description: Password for accessing the ast repository.
         required: false
+      moderne_artifactory_username:
+        description: Username for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: true
+      moderne_artifactory_password:
+        description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: true
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
@@ -29,8 +35,8 @@ env:
   GRGIT_AUTH_SWITCHES: "-Dorg.ajoberstar.grgit.auth.username=${{github.actor}} -Dorg.ajoberstar.grgit.auth.password=${{secrets.caller_github_token}}"
   AST_PUBLISH_USERNAME: ${{ secrets.ast_publish_username }}
   AST_PUBLISH_PASSWORD: ${{ secrets.ast_publish_password }}
-  MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.MODERNE_ARTIFACTORY_USERNAME }}
-  MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.MODERNE_ARTIFACTORY_PASSWORD }}
+  MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
+  MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
 
 jobs:
   release:
