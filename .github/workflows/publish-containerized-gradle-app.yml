@@ -51,6 +51,8 @@ jobs:
           TESTCONTAINERS_RYUK_DISABLED: true
           GRGIT_USER: ${{ github.actor }}
           GRGIT_PASS: ${{ secrets.GITHUB_TOKEN }}
+          MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
+          MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} final -x test
       - name: Send notification on error
