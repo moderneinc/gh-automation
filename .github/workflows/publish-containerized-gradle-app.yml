@@ -55,6 +55,8 @@ jobs:
           MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} final -x test
+          secrets: |
+            "AZURE_DEVOPS_PAT=${{ secrets.AZURE_DEVOPS_PAT }}"
       - name: Send notification on error
         if: ${{ failure() }}
         uses: slackapi/slack-github-action@v1.24.0
