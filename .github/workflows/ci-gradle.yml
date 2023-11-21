@@ -45,10 +45,10 @@ on:
         required: false
       moderne_artifactory_username:
         description: Username for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
-        required: true
+        required: false
       moderne_artifactory_password:
         description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
-        required: true
+        required: false
 env:
   GRADLE_SWITCHES: --console=plain --info --warning-mode=all
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.gradle_enterprise_access_key }}
