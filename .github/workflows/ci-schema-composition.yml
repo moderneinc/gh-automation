@@ -1,0 +1,85 @@
+name: Compose supergraph schema
+
+on:
+  workflow_call:
+
+jobs:
+  fetch-and-compose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.GH_MEESEEKS_APP_ID }}
+          private_key: ${{ secrets.GH_MEESEEKS_PRIVATE_KEY }}
+      # use this service to get the current list of services in the federation
+      - name: Checkout graphql-api
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-graphql-api"
+          ref: ${{ endsWith(github.repository,'moderne-graphql-api') && github.ref || 'main' }}
+          path: "moderne-graphql-api"
+      # all available services
+      - name: Checkout SCM
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-scm"
+          ref: ${{ endsWith(github.repository,'moderne-scm') && github.ref || 'main' }}
+          path: "moderne-scm"
+      - name: Checkout recipe-execution
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-recipe-execution"
+          ref: ${{ endsWith(github.repository,'moderne-recipe-execution') && github.ref || 'main' }}
+          path: "moderne-recipe-execution"
+      - name: Checkout token-service
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-token-service"
+          ref: ${{ endsWith(github.repository,'moderne-token-service') && github.ref || 'main' }}
+          path: "moderne-token-service"
+      - name: Checkout audit
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-audit"
+          ref: ${{ endsWith(github.repository,'moderne-audit') && github.ref || 'main' }}
+          path: "moderne-audit"
+      - name: Checkout artifact-storage
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-artifact-storage"
+          ref: ${{ endsWith(github.repository,'moderne-artifact-storage') && github.ref || 'main' }}
+          path: "moderne-artifact-storage"
+      - name: Checkout org-dashboard
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-org-dashboard"
+          ref: ${{ endsWith(github.repository,'moderne-org-dashboard') && github.ref || 'main' }}
+          path: "moderne-org-dashboard"
+      - name: Checkout visualizations
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repository: "moderneinc/moderne-visualizations"
+          ref: ${{ endsWith(github.repository,'moderne-visualizations') && github.ref || 'main' }}
+          path: "moderne-visualizations"
+      - name: Install Rover
+        run: |
+          curl -sSL https://rover.apollo.dev/nix/latest | sh
+          echo "$HOME/.rover/bin" >> $GITHUB_PATH
+      - name: Compose supergraph
+        run: |
+          rover supergraph compose --elv2-license accept --config moderne-graphql-api/moderne-apollo-server/localdev-config.yml > supergraph.graphql
+      - name: Upload supergraph
+        uses: actions/upload-artifact@v4
+        with:
+          name: supergraph
+          path: supergraph.graphql
