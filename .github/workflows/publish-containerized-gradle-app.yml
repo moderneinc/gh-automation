@@ -64,3 +64,13 @@ jobs:
           slack-message: ":boom: Unable to build an artifact for ${{ github.repository }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_MEESEEKS_BOT_TOKEN }}
+      - name: Create release
+        if: ${{ success() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export tag=$(git describe --tags --abbrev=0)
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${tag#v}" \
+              --generate-notes
