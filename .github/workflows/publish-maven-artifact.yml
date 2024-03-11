@@ -9,6 +9,11 @@ on:
         default: minor
         type: string
         required: true
+      runner:
+        description: Which runner to use
+        default: ubuntu-latest
+        type: string
+        required: false
     secrets:
       google_cloud_service_account_key:
         description: Optional Google Cloud service account key, assuming setup_google_cloud_auth is true.
@@ -40,7 +45,7 @@ env:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
     if: github.repository_owner == 'moderneinc'
     steps:
       - name: git-checkout
