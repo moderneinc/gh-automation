@@ -51,7 +51,7 @@ jobs:
       - run: rm -rf /opt/hostedtoolcache/go
       - run: rm -rf /opt/hostedtoolcache/node
       - name: build, tag, and push docker image
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
           GRGIT_USER: ${{ github.actor }}
