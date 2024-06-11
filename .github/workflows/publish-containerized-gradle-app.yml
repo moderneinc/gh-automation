@@ -26,6 +26,9 @@ env:
 jobs:
   release:
     runs-on: ${{ inputs.runner }}
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -35,21 +38,28 @@ jobs:
           distribution: temurin
           java-version: ${{ inputs.java_version }}
           cache: "gradle"
+
       - name: configure-git-user
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-      - uses: google-github-actions/auth@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          credentials_json: ${{ secrets.GCR_KEY }}
-      - uses: google-github-actions/setup-gcloud@v1.1.1
+          aws-region: us-west-2
 
-      - run: gcloud auth configure-docker
-      - run: rm -rf /opt/hostedtoolcache/CodeQL
-      - run: rm -rf /opt/hostedtoolcache/Ruby
-      - run: rm -rf /opt/hostedtoolcache/go
-      - run: rm -rf /opt/hostedtoolcache/node
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+  
+      - name: Clear cache
+        run: | 
+          rm -rf /opt/hostedtoolcache/CodeQL
+          rm -rf /opt/hostedtoolcache/Ruby
+          rm -rf /opt/hostedtoolcache/go
+          rm -rf /opt/hostedtoolcache/node
+
       - name: build, tag, and push docker image
         uses: gradle/actions/setup-gradle@v3
         env:
@@ -58,9 +68,9 @@ jobs:
           GRGIT_PASS: ${{ secrets.GITHUB_TOKEN }}
           MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
           MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
-          AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
         with:
-          arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} -Dorg.gradle.project.ast.publish.username=${{ secrets.AST_PUBLISH_USERNAME }} -Dorg.gradle.project.ast.publish.password=${{ secrets.AST_PUBLISH_PASSWORD }} final -x test
+          arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} final -x test
+
       - name: Send notification on error
         if: ${{ failure() }}
         uses: slackapi/slack-github-action@v1.24.0
@@ -69,6 +79,7 @@ jobs:
           slack-message: ":boom: Unable to build an artifact for ${{ github.repository }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_MEESEEKS_BOT_TOKEN }}
+
       - name: Create release
         if: ${{ success() }}
         env:
