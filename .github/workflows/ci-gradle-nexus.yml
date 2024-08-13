@@ -24,11 +24,6 @@ on:
         type: string
         required: false
         default: ""
-      setup_google_cloud_auth:
-        description: Whether to attempt setting up google cloud auth. Namely, for pulling artifacts from a Google Registry.
-        type: boolean
-        default: true
-        required: false
     secrets:
       gradle_enterprise_access_key:
         description: Value of the Gradle Enterprise access token to use.
@@ -47,9 +42,6 @@ on:
         required: true
       ossrh_signing_password:
         required: true
-      gcr_key:
-        description: The key necessary to authenticate with google cloud account.
-        required: false
       ast_publish_username:
         description: Username for accessing the ast repository.
         required: false
@@ -77,13 +69,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: gradle/actions/wrapper-validation@v3
       ########################
       # The biggest divergence point is choosing between actions/setup-java or graalvm
-      - uses: actions/setup-java@v3.10.0
+      - uses: actions/setup-java@v4
         if: (!(inputs.build_on_graal))
         with:
           distribution: temurin
@@ -98,16 +90,12 @@ jobs:
         if: inputs.build_on_graal && inputs.install_graal_languages != ''
         run: gu install ${{ inputs.install_graal_languages }}
       ########################
-      - uses: google-github-actions/auth@v1
-        if: inputs.setup_google_cloud_auth
-        with:
-          credentials_json: ${{ secrets.GCR_KEY }}
-      - uses: google-github-actions/setup-gcloud@v1.1.1
-        if: inputs.setup_google_cloud_auth
+
       - name: build
         uses: gradle/actions/setup-gradle@v3
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} build
+
       - name: publish-snapshots
         if: inputs.publish_snapshots && github.event_name != 'pull_request' && github.repository_owner == 'moderneinc'
         uses: gradle/actions/setup-gradle@v3
