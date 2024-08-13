@@ -48,7 +48,7 @@ jobs:
           args: --overwrite --remove
       - name: Send notification on error
         if: ${{ failure() }}
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1.26.0
         with:
           channel-id: ${{ inputs.slack_channel }}
           slack-message: ":boom: Unable to backup ${{ github.repository }} to S3"
