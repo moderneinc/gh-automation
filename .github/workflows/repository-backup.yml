@@ -35,7 +35,7 @@ jobs:
   repository-backup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: peter-evans/s3-backup@v1
@@ -54,4 +54,3 @@ jobs:
           slack-message: ":boom: Unable to backup ${{ github.repository }} to S3"
         env:
           SLACK_BOT_TOKEN: ${{ secrets.slack_bot_token }}
-

@@ -14,11 +14,6 @@ on:
         type: boolean
         default: false
         required: false
-      setup_google_cloud_auth:
-        description: Whether to attempt setting up google cloud auth. Namely, for pulling artifacts from a Google Registry.
-        type: boolean
-        default: true
-        required: false
       publish_lsts:
         description: Whether to attempt publishing LSTS results.
         type: boolean
@@ -33,9 +28,6 @@ on:
         required: false
       gradle_enterprise_cache_password:
         description: Value of the Gradle Enterprise Cache password to use.
-        required: false
-      gcr_key:
-        description: The key necessary to authenticate with google cloud account.
         required: false
       ast_publish_username:
         description: Username for accessing the ast repository.
@@ -63,7 +55,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup git user
@@ -71,20 +63,16 @@ jobs:
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
           git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
       - uses: gradle/actions/wrapper-validation@v3
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: ${{ inputs.java_version }}
-      - uses: google-github-actions/auth@v1
-        if: inputs.setup_google_cloud_auth
-        with:
-          credentials_json: ${{ secrets.GCR_KEY }}
-      - uses: google-github-actions/setup-gcloud@v1.1.1
-        if: inputs.setup_google_cloud_auth
+
       - name: build
         uses: gradle/actions/setup-gradle@v3
         with:
           arguments: ${{ env.GRADLE_SWITCHES }} build
+
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always() && inputs.publish_tests
