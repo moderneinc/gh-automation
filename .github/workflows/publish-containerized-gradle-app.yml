@@ -60,16 +60,17 @@ jobs:
           rm -rf /opt/hostedtoolcache/go
           rm -rf /opt/hostedtoolcache/node
 
-      - name: build, tag, and push docker image
+      - name: set up gradle
         uses: gradle/actions/setup-gradle@v4
+      - name: build, tag, and push docker image
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
           GRGIT_USER: ${{ github.actor }}
           GRGIT_PASS: ${{ secrets.GITHUB_TOKEN }}
           MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
           MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
-        with:
-          arguments: ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} final -x test
+        run: ./gradlew ${{ env.GRADLE_SWITCHES }} -Prelease.scope=${{ inputs.release_scope }} final -x test
+
 
       - name: Send notification on error
         if: ${{ failure() }}
