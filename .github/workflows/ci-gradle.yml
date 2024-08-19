@@ -68,10 +68,10 @@ jobs:
           distribution: temurin
           java-version: ${{ inputs.java_version }}
 
-      - name: build
+      - name: setup gradle
         uses: gradle/actions/setup-gradle@v4
-        with:
-          arguments: ${{ env.GRADLE_SWITCHES }} build
+      - name: build
+        run: ./gradlew ${{ env.GRADLE_SWITCHES }} build
 
       - name: publish-tests
         uses: EnricoMi/publish-unit-test-result-action@v2
