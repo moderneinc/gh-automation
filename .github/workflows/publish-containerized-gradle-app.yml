@@ -61,7 +61,7 @@ jobs:
           rm -rf /opt/hostedtoolcache/node
 
       - name: build, tag, and push docker image
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
           GRGIT_USER: ${{ github.actor }}
