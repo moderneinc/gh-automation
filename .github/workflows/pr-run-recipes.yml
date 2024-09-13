@@ -47,9 +47,18 @@ on:
               }
             }
           }
+    secrets:
+      moderne_artifactory_username:
+        description: Username for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: false
+      moderne_artifactory_password:
+        description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
+        required: false
 
 env:
   GRADLE_SWITCHES: --console=plain --info --stacktrace --warning-mode=all --no-daemon -Dorg.gradle.jvmargs=-Xmx2g
+  MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
+  MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
 
 # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
 # Since this pull request receives untrusted code, we should **NOT** have any secrets in the environment.
