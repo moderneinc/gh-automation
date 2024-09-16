@@ -21,7 +21,7 @@ on:
           description: Applies best practices for Moderne Inc. SaaS repositories.
           recipeList:
             - org.openrewrite.java.testing.assertj.Assertj
-            #- org.openrewrite.java.testing.cleanup.BestPractices
+            - org.openrewrite.java.testing.cleanup.RemoveTestPrefix
             - org.openrewrite.java.logging.slf4j.Slf4jBestPractices
             - org.openrewrite.java.OrderImports:
                 removeUnused: true
