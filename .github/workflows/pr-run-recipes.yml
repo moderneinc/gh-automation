@@ -4,6 +4,11 @@ name: pr-run-recipes
 on:
   workflow_call:
     inputs:
+      java_version:
+        description: What version of Java to use
+        type: number
+        default: 17
+        required: false
       recipe:
         description: The OpenRewrite recipe to apply to the PR
         type: string
@@ -86,7 +91,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: ${{ inputs.java_version }}
 
       # Capture the PR number
       - name: Create pr_number.txt
