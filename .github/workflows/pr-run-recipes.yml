@@ -4,6 +4,11 @@ name: pr-run-recipes
 on:
   workflow_call:
     inputs:
+      java_version:
+        description: What version of Java to use
+        type: number
+        default: 17
+        required: false
       recipe:
         description: The OpenRewrite recipe to apply to the PR
         type: string
@@ -21,6 +26,28 @@ on:
           description: Applies best practices for Moderne Inc. SaaS repositories.
           recipeList:
             - org.openrewrite.java.testing.assertj.Assertj
+            - org.openrewrite.java.testing.cleanup.RemoveTestPrefix
+            - org.openrewrite.java.logging.slf4j.Slf4jBestPractices
+            - org.openrewrite.java.OrderImports:
+                removeUnused: true
+            - org.openrewrite.staticanalysis.RemoveExtraSemicolons
+            - io.moderne.NullabilityBestPractices
+          ---
+          type: specs.openrewrite.org/v1beta/recipe
+          name: io.moderne.NullabilityBestPractices
+          displayName: Nullability best practices
+          description: Use JSpecify nullable annotations; drop Nonnull annotations; use `NullMarked` on `package-info.java` instead.
+          recipeList:
+            - org.openrewrite.java.jspecify.MigrateFromOpenRewriteAnnotations
+            - org.openrewrite.staticanalysis.NullableOnMethodReturnType
+            - org.openrewrite.java.RemoveAnnotation:
+                annotationPattern: '@org.jetbrains.annotations.NotNull'
+            - org.openrewrite.java.RemoveAnnotation:
+                annotationPattern: '@javax.annotation.Nonnull'
+            - org.openrewrite.java.RemoveAnnotation:
+                annotationPattern: '@jakarta.annotation.Nonnull'
+            - org.openrewrite.java.jspecify.MigrateToJspecify
+
       init_gradle:
         description: The Gradle init script to apply to the PR
         type: string
@@ -74,7 +101,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: ${{ inputs.java_version }}
 
       # Capture the PR number
       - name: Create pr_number.txt
