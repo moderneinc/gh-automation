@@ -30,6 +30,7 @@ on:
             - org.openrewrite.java.logging.slf4j.Slf4jBestPractices
             - org.openrewrite.java.OrderImports:
                 removeUnused: true
+            - org.openrewrite.staticanalysis.RemoveExtraSemicolons
             - io.moderne.NullabilityBestPractices
           ---
           type: specs.openrewrite.org/v1beta/recipe
