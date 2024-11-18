@@ -74,7 +74,7 @@ jobs:
 
       - name: Send notification on error
         if: ${{ failure() }}
-        uses: slackapi/slack-github-action@v1.27.0
+        uses: slackapi/slack-github-action@v2.0.0
         with:
           channel-id: "#ops-saas-deployments"
           slack-message: ":boom: Unable to build an artifact for ${{ github.repository }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
