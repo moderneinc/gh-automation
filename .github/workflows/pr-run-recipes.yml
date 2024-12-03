@@ -47,6 +47,7 @@ on:
             - org.openrewrite.java.RemoveAnnotation:
                 annotationPattern: '@jakarta.annotation.Nonnull'
             - org.openrewrite.java.jspecify.MigrateToJspecify
+            - tech.picnic.errorprone.refasterrules.TimeRulesRecipes
 
       init_gradle:
         description: The Gradle init script to apply to the PR
