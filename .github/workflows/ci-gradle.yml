@@ -41,6 +41,9 @@ on:
       moderne_artifactory_password:
         description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
         required: false
+      OPS_GITHUB_ACTIONS_WEBHOOK:
+        required: false
+
 env:
   GRADLE_SWITCHES: --console=plain --info --warning-mode=all
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.gradle_enterprise_access_key }}
@@ -78,3 +81,14 @@ jobs:
         if: always() && inputs.publish_tests
         with:
           files: ./**/build/test-results/**/TEST-*.xml
+
+      - name: slackNotificationOfFailure
+        if: failure() && github.event_name == 'schedule' && (github.repository_owner == 'openrewrite' || github.repository_owner == 'moderneinc')
+        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK: ${{ secrets.OPS_GITHUB_ACTIONS_WEBHOOK }}
+          MSG_MINIMAL: actions url
+          SLACK_USERNAME: ${{ github.event.repository.name }} CI failure
+          SLACK_COLOR: failure
+          SLACK_FOOTER: ''
