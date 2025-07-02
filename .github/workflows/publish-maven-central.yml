@@ -13,9 +13,9 @@ on:
       gradle_enterprise_cache_password:
         description: Value of the Gradle Enterprise Cache password to use.
         required: false
-      ossrh_username:
+      sonatype_username:
         required: true
-      ossrh_token:
+      sonatype_token:
         required: true
       ossrh_signing_key:
         required: true
