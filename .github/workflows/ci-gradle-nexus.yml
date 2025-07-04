@@ -104,7 +104,7 @@ jobs:
         if: inputs.publish_snapshots && github.event_name != 'pull_request' && github.repository_owner == 'moderneinc'
         run: ./gradlew ${{ env.GRADLE_SWITCHES }} snapshot publish -PforceSigning -x test
         env:
-          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.ossrh_username }}
-          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.ossrh_token }}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.sonatype_username }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.sonatype_token }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ossrh_signing_key }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ossrh_signing_password }}
