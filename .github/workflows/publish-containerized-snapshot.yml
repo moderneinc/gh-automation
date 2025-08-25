@@ -19,7 +19,7 @@ env:
   GRADLE_SWITCHES: --console=plain --info --stacktrace
 
 jobs:
-  release:
+  publish-snapshot:
     runs-on: ${{ inputs.runner }}
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
