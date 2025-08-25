@@ -9,11 +9,6 @@ on:
         type: number
         default: 17
         required: false
-      release_scope:
-        description: Git tagging release scope, such as major, minor, or patch.
-        type: string
-        required: true
-        default: minor
       runner:
         description: Which runner to use
         default: ubuntu-latest
