@@ -44,7 +44,7 @@ jobs:
           rm pr_number.txt
 
       # Post suggestions as a comment on the PR
-      - uses: moderneinc/googleapis-code-suggester@v4-moderne
+      - uses: moderneinc/googleapis-code-suggester@main
         with:
           command: review
           pull_number: ${{ env.PR_NUMBER }}
