@@ -72,7 +72,7 @@ jobs:
           java-version: ${{ inputs.java_version }}
 
       - name: setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
       - name: build
         run: ./gradlew ${{ env.GRADLE_SWITCHES }} build
 
