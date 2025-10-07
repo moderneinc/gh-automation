@@ -92,14 +92,14 @@ jobs:
       ########################
 
       - name: setup gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
       - name: build
         run: ./gradlew ${{ env.GRADLE_SWITCHES }} build
 
 
       - name: publish-snapshots
         if: inputs.publish_snapshots && github.event_name != 'pull_request' && github.repository_owner == 'moderneinc'
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
       - name: build
         if: inputs.publish_snapshots && github.event_name != 'pull_request' && github.repository_owner == 'moderneinc'
         run: ./gradlew ${{ env.GRADLE_SWITCHES }} snapshot publish -PforceSigning -x test

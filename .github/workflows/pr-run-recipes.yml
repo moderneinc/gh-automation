@@ -116,7 +116,7 @@ jobs:
 
       # Setup Gradle
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
 
       # Execute best practices recipe
       - name: Create temporary files

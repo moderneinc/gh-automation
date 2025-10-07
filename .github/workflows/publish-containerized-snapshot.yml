@@ -56,7 +56,7 @@ jobs:
           rm -rf /opt/hostedtoolcache/node
 
       - name: set up gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v5
       - name: build, tag, and push docker image
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
