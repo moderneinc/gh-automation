@@ -3,6 +3,12 @@ name: publish-gradle
 
 on:
   workflow_call:
+    inputs:
+      java_version:
+        description: What version of Java to use
+        type: number
+        default: 25
+        required: false
     secrets:
       gradle_enterprise_access_key:
         description: Value of the Gradle Enterprise access token to use.
@@ -59,7 +65,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: ${{ inputs.java_version }}
 
       - name: setup gradle
         uses: gradle/actions/setup-gradle@v5

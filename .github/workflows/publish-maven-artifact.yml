@@ -4,6 +4,11 @@ name: publish-maven-artifact
 on:
   workflow_call:
     inputs:
+      java_version:
+        description: What version of Java to use
+        type: number
+        default: 25
+        required: false
       release_scope:
         description: Git tagging release scope, such as major, minor, or patch.
         default: minor
@@ -53,7 +58,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: ${{ inputs.java_version }}
           cache: "gradle"
       - name: configure-git-user
         run: |
