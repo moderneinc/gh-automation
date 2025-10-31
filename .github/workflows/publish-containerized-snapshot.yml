@@ -7,7 +7,7 @@ on:
       java_version:
         description: What version of Java to use
         type: number
-        default: 25
+        default: 21
         required: false
       runner:
         description: Which runner to use
