@@ -8,6 +8,7 @@ on:
         description: What version of Java to use
         type: number
         default: |
+          25
           17
           21
         required: false
