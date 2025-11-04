@@ -7,7 +7,10 @@ on:
       java_version:
         description: What version of Java to use
         type: number
-        default: 17
+        default: |
+          25
+          17
+          21
         required: false
       publish_tests:
         description: Whether to attempt publishing unit test results.

@@ -7,7 +7,10 @@ on:
       java_version:
         description: What version of Java to use
         type: number
-        default: 17
+        default: |
+          25
+          17
+          21
         required: false
       release_scope:
         description: Git tagging release scope, such as major, minor, or patch.
