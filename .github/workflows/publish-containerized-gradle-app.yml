@@ -7,10 +7,7 @@ on:
       java_version:
         description: What version of Java to use
         type: number
-        default: |
-          25
-          17
-          21
+        default: 17
         required: false
       release_scope:
         description: Git tagging release scope, such as major, minor, or patch.
@@ -36,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: ${{ inputs.java_version }}

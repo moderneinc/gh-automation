@@ -7,10 +7,7 @@ on:
       java_version:
         description: What version of Java to use
         type: number
-        default: |
-          25
-          17
-          21
+        default: 17
         required: false
       recipe:
         description: The OpenRewrite recipe to apply to the PR
@@ -102,7 +99,7 @@ jobs:
         with:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: ${{ inputs.java_version }}
