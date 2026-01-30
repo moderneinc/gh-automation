@@ -87,7 +87,7 @@ jobs:
           retention-days: 14
 
       - name: Upload build logs on failure
-        if: failure() && inputs.publish_tests
+        if: failure()
         uses: actions/upload-artifact@v6
         with:
           name: build-logs-${{ github.run_id }}
