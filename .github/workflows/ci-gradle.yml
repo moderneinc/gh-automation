@@ -12,7 +12,7 @@ on:
       publish_tests:
         description: Whether to attempt publishing unit test results.
         type: boolean
-        default: false
+        default: true
         required: false
       publish_lsts:
         description: Whether to attempt publishing LSTS results.
@@ -45,7 +45,7 @@ on:
         required: false
 
 env:
-  GRADLE_SWITCHES: --console=plain --info --warning-mode=all
+  GRADLE_SWITCHES: --console=plain --info --stacktrace --warning-mode=all
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.gradle_enterprise_access_key }}
   GRADLE_ENTERPRISE_CACHE_USERNAME: ${{ secrets.gradle_enterprise_cache_username }}
   GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.gradle_enterprise_cache_password }}
@@ -76,11 +76,26 @@ jobs:
       - name: build
         run: ./gradlew ${{ env.GRADLE_SWITCHES }} build
 
-      - name: publish-tests
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always() && inputs.publish_tests
+      - name: Upload test reports on failure
+        if: failure() && inputs.publish_tests
+        uses: actions/upload-artifact@v6
         with:
-          files: ./**/build/test-results/**/TEST-*.xml
+          name: test-reports-${{ github.run_id }}
+          path: |
+            **/build/test-results/
+            **/build/reports/tests/
+          retention-days: 14
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: build-logs-${{ github.run_id }}
+          path: |
+            **/build/reports/
+            **/*.hprof
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: slackNotificationOfFailure
         if: (failure() || cancelled()) && github.event_name == 'schedule' && (github.repository_owner == 'openrewrite' || github.repository_owner == 'moderneinc')
