@@ -35,6 +35,12 @@ on:
       moderne_artifactory_password:
         description: Password for accessing the https://artifactory.moderne.ninja/artifactory/moderne-private repository.
         required: false
+      cgp_artifacts_maven_username:
+        description: Username for artifacts.codegenomeproject.org, used to resolve org.openrewrite and io.moderne dependencies.
+        required: false
+      cgp_artifacts_maven_token:
+        description: Token for artifacts.codegenomeproject.org, used to resolve org.openrewrite and io.moderne dependencies.
+        required: false
 
 env:
   GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
@@ -44,6 +50,10 @@ env:
   AST_PUBLISH_PASSWORD: ${{ secrets.ast_publish_password }}
   MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
   MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
+  # Resolve org.openrewrite and io.moderne dependencies from the Code Genome Project. The repository
+  # declaration is guarded on both values being set, so builds without them resolve as they do today.
+  ORG_GRADLE_PROJECT_codegenomeUsername: ${{ secrets.cgp_artifacts_maven_username }}
+  ORG_GRADLE_PROJECT_codegenomePassword: ${{ secrets.cgp_artifacts_maven_token }}
 
 jobs:
   release:
