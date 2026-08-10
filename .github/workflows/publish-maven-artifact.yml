@@ -50,8 +50,6 @@ env:
   AST_PUBLISH_PASSWORD: ${{ secrets.ast_publish_password }}
   MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
   MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
-  # Resolve org.openrewrite and io.moderne dependencies from the Code Genome Project. The repository
-  # declaration is guarded on both values being set, so builds without them resolve as they do today.
   ORG_GRADLE_PROJECT_codegenomeUsername: ${{ secrets.cgp_artifacts_maven_username }}
   ORG_GRADLE_PROJECT_codegenomePassword: ${{ secrets.cgp_artifacts_maven_token }}
 
