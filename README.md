@@ -8,8 +8,6 @@ Public reusable GitHub Actions workflows.
 | [publish-maven-artifact](.github/workflows/publish-maven-artifact.yml) | Tag a release of a Gradle library, publish it, and cut a GitHub release |
 | [publish-containerized-gradle-app](.github/workflows/publish-containerized-gradle-app.yml) | Build and publish a release Docker image of a Gradle application to ECR |
 | [publish-containerized-snapshot](.github/workflows/publish-containerized-snapshot.yml) | Build and publish a snapshot Docker image of a Gradle application to ECR |
-| [pr-run-recipes](.github/workflows/pr-run-recipes.yml) | Run OpenRewrite best practice recipes against a pull request and upload the resulting patch |
-| [pr-post-suggestions](.github/workflows/pr-post-suggestions.yml) | Post the patch produced by `pr-run-recipes` as review suggestions on the pull request |
 | [repository-backup](.github/workflows/repository-backup.yml) | Back-up repository to AWS S3 bucket |
 
 Public OpenRewrite repositories use the equivalents in
