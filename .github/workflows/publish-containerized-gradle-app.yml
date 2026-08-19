@@ -21,7 +21,7 @@ on:
         required: false
 
 env:
-  GRADLE_SWITCHES: --console=plain --info --stacktrace
+  GRADLE_SWITCHES: --console=plain --info --stacktrace --refresh-dependencies
 
 jobs:
   release:
