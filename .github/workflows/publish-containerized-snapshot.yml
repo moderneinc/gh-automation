@@ -64,6 +64,6 @@ jobs:
           GRGIT_PASS: ${{ secrets.GITHUB_TOKEN }}
           MODERNE_ARTIFACTORY_USERNAME: ${{ secrets.moderne_artifactory_username }}
           MODERNE_ARTIFACTORY_PASSWORD: ${{ secrets.moderne_artifactory_password }}
-          ORG_GRADLE_PROJECT_codegenomeUsername: ${{ secrets.CODEGENOME_USERNAME || secrets.cgp_artifacts_maven_username }}
-          ORG_GRADLE_PROJECT_codegenomePassword: ${{ secrets.CODEGENOME_TOKEN || secrets.cgp_artifacts_maven_token }}
+          ORG_GRADLE_PROJECT_codegenomeUsername: ${{ secrets.CODEGENOME_USERNAME }}
+          ORG_GRADLE_PROJECT_codegenomePassword: ${{ secrets.CODEGENOME_TOKEN }}
         run: ./gradlew ${{ env.GRADLE_SWITCHES }} dockerBuildImage dockerPushImageAmazon -x test
